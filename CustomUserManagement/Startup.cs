@@ -38,6 +38,7 @@ namespace CustomUserManagement
                 options.Password.RequiredLength = 10;
                 options.Password.RequiredUniqueChars = 3;
                 options.Password.RequireNonAlphanumeric = false;
+                
 
             })  .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
