@@ -32,7 +32,11 @@ namespace CustomUserManagement.Controllers
                 // Copio la data de RegisterViewModel a IdentityUser o ApplicationUser(Extendido)
                 var user = new ApplicationUser
                 {
-                    UserName = model.UserName,
+                    UserName = model.Email,
+                    FullName = model.FullName,
+                    Birthdate = model.Birthdate,
+                    PhoneNumber = model.PhoneNumber,
+                    City = model.City,
                     Email = model.Email
                                 
                 };
