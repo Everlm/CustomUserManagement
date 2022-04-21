@@ -29,7 +29,6 @@ namespace CustomUserManagement.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Copio la data de RegisterViewModel a IdentityUser o ApplicationUser(Extendido)
                 var user = new ApplicationUser
                 {
                     UserName = model.Email,
@@ -38,22 +37,17 @@ namespace CustomUserManagement.Controllers
                     PhoneNumber = model.PhoneNumber,
                     City = model.City,
                     Email = model.Email
-                                
+
                 };
 
-                // Almaceno los datos de usuario en la tabla IdentityUsers 
                 var result = await userManager.CreateAsync(user, model.Password);
 
-                // Si se crea correctamente inicia sesion con el usuario creado
-                // Inicia sesion y  redirige al index con la accion de HomeController
                 if (result.Succeeded)
                 {
                     await signInManager.SignInAsync(user, isPersistent: false);
                     return RedirectToAction("index", "home");
                 }
 
-                // Si existe algun error, lo agrega al objeto ModelState 
-                // se mostrara la validacion en el axistente de etiquetas
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
@@ -69,7 +63,7 @@ namespace CustomUserManagement.Controllers
             LoginViewModel model = new LoginViewModel
             {
                 ReturnUrl = returnUrl,
-              
+
             };
 
             return View(model);
@@ -106,6 +100,22 @@ namespace CustomUserManagement.Controllers
         {
             await signInManager.SignOutAsync();
             return RedirectToAction("index", "home");
+        }
+
+        //Valida si el correo ya existe remotamente
+        [AcceptVerbs("Get", "Post")]
+        public async Task<IActionResult> IsEmailInUse(string email)
+        {
+            var user = await userManager.FindByEmailAsync(email);
+
+            if (user == null)
+            {
+                return Json(true);
+            }
+            else
+            {
+                return Json($"Email {email} is already in use");
+            }
         }
     }
 }
