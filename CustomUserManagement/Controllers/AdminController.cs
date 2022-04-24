@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using CustomUserManagement.ViewModels;
 using System.Threading.Tasks;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace CustomUserManagement.Controllers
 {
@@ -13,6 +15,13 @@ namespace CustomUserManagement.Controllers
         {
             this.roleManager = roleManager;
         }
+
+        [HttpGet]
+        public async Task <IActionResult> ListRoles()
+        {
+            return View(await roleManager.Roles.ToListAsync());
+        }
+
 
         [HttpGet]
         public IActionResult CreateRole()
