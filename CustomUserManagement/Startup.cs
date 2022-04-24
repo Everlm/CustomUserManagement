@@ -45,6 +45,7 @@ namespace CustomUserManagement
             })  .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+            services.AddRazorPages().AddRazorRuntimeCompilation();
             //services.AddMvc(config => {
             //    var policy = new AuthorizationPolicyBuilder()
             //                    .RequireAuthenticatedUser()
