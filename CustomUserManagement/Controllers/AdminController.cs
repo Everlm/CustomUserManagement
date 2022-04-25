@@ -55,6 +55,45 @@ namespace CustomUserManagement.Controllers
             return View(Model);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> EditRole(string id)
+        {
+            var role = await roleManager.FindByIdAsync(id);
+            if (role == null)
+            {
+                ViewBag.ErrorMessage = $"Role with Id = {id} cannot be found";
+                return View("NoFound");
+            }
+
+            var model = new EditRoleViewModel
+            {
+                Id = role.Id,
+                RoleName = role.Name
+            };
+            
+             return View(model);
+           
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditRole(EditRoleViewModel model)
+        {
+            var role = await roleManager.FindByIdAsync();
+
+            if (role == null)
+            {
+                ViewBag.ErrorMessage = $"Role with Id = {id} cannot be found";
+                return View("NoFound");
+            }
+
+            var model = new EditRoleViewModel
+            {
+                RoleName = role.Name
+            };
+
+            return View(model);
+
+        }
 
     }
 }

@@ -76,7 +76,9 @@ namespace CustomUserManagement.Controllers
             if (ModelState.IsValid)
             {
                 var result = await signInManager.PasswordSignInAsync(
-                    model.Email, model.Password, model.RememberMe, false);
+                    model.Email, 
+                    model.Password, 
+                    model.RememberMe, false);
 
                 if (result.Succeeded)
                 {
@@ -96,6 +98,7 @@ namespace CustomUserManagement.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         public async Task<IActionResult> Logout()
         {
