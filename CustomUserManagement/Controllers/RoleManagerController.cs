@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using CustomUserManagement.Models;
+using CustomUserManagement.Utilities;
+using System;
 
 namespace CustomUserManagement.Controllers
 {
@@ -138,9 +140,10 @@ namespace CustomUserManagement.Controllers
                     ModelState.AddModelError("", error.Description);
                 }
             }
-           
+
             return View("ListRoles");
 
         }
+
     }
 }

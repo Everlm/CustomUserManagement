@@ -2,6 +2,8 @@
 // for details on configuring this project to bundle and minify static web assets.
 
 // Write your JavaScript code.
+
+
 function confirmDelete(uniqueId, isDeleteClicked) {
     var deleteSpan = 'deleteSpan_' + uniqueId;
     var confirmDeleteSpan = 'confirmDeleteSpan_' + uniqueId;
@@ -14,3 +16,4 @@ function confirmDelete(uniqueId, isDeleteClicked) {
         $('#' + confirmDeleteSpan).hide();
     }
 }
+

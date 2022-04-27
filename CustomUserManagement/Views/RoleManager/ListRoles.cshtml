@@ -27,24 +27,21 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Name)
                 </td>
-
-                <td>
-                    <a class="btn btn-outline-warning" asp-controller="RoleManager" asp-action="EditRole" asp-route-id="@item.Id">Edit</a>
-
-                    <form asp-action="DeleteRole" asp-route-id="@item.Id" method="post">
+                <td> 
+                   <form asp-action="DeleteRole" asp-route-id="@item.Id" method="post">
                         <span id="confirmDeleteSpan_@item.Id" style="display:none">
-                            <span>Are you sure you want to delete?</span>
+                            <span>Confirm delete @item.Name?</span>
                             <button type="submit" class="btn btn-danger">Yes</button>
                             <a href="#" class="btn btn-primary"
                            onclick="confirmDelete('@item.Id', false)">No</a>
                         </span>
-
+                         <a class="btn btn-outline-warning" asp-controller="RoleManager" asp-action="EditRole" asp-route-id="@item.Id">Edit</a>
                         <span id="deleteSpan_@item.Id">
-                            <a href="#" class="btn btn-danger"
+                            <a href="#" class="btn btn-outline-danger"
                            onclick="confirmDelete('@item.Id', true)">Delete</a>
                         </span>
-                    </form>
-                    <a class="btn btn-outline-info" asp-controller="RoleManager" asp-action="DeleteRole" asp-route-id="@item.Id">Details </a>
+                      @*  <a class="btn btn-outline-info" asp-controller="RoleManager" asp-action="DetailsRole" asp-route-id="@item.Id">Details </a>*@
+                    </form>                  
                 </td>
             </tr>
         }
