@@ -34,6 +34,8 @@ namespace CustomUserManagement
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
 
+            services.AddDatabaseDeveloperPageExceptionFilter();
+
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
 

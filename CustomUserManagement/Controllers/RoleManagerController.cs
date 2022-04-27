@@ -8,14 +8,15 @@ using CustomUserManagement.Models;
 
 namespace CustomUserManagement.Controllers
 {
-    public class AdminController : Controller
+    public class RoleManagerController : Controller
     {
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly UserManager<ApplicationUser> userManager;
 
-        public AdminController(RoleManager<IdentityRole> roleManager)
+        public RoleManagerController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager)
         {
             this.roleManager = roleManager;
+            this.userManager = userManager;
         }
 
         [HttpGet]
@@ -45,7 +46,7 @@ namespace CustomUserManagement.Controllers
 
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("ListRoles");
                 }
 
                 foreach (IdentityError error in result.Errors)
@@ -109,6 +110,36 @@ namespace CustomUserManagement.Controllers
                 return View(Model);
 
             }
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteRole(string id)
+        {
+            var role = await roleManager.FindByIdAsync(id);
+
+            if (role == null)
+            {
+                ViewBag.ErrorMessage = $"Role with Id = {id} cannot be found";
+                return View("NoFound");
+            }
+            else
+            {
+                var result = await roleManager.DeleteAsync(role);
+
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("ListRoles");
+
+                }
+
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+            }
+           
+            return View("ListRoles");
 
         }
     }

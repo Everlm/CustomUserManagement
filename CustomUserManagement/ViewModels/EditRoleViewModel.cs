@@ -10,7 +10,7 @@ namespace CustomUserManagement.ViewModels
        
         public string Id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage ="RoleName is required")]
         public string RoleName { get; set; }
 
     }
