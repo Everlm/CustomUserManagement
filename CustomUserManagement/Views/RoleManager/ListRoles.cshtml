@@ -5,12 +5,13 @@
 }
 
 <br />
-<h1>Roles</h1>
+<h1>All Roles</h1>
 <br />
-
 <p>
-    <a class="btn btn-primary" asp-action="CreateRole" asp-controller="RoleManager">Add</a>
+    <a class="btn btn-outline-primary" asp-action="CreateRole" asp-controller="RoleManager">Add</a>
 </p>
+<div class="card">
+
 <table class="table">
     <thead>
         <tr class="">
@@ -47,6 +48,7 @@
         }
     </tbody>
 </table>
+</div>
 
 @section Scripts {
     <script src="~/js/site.js"></script>

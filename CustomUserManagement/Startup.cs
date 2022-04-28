@@ -35,6 +35,7 @@ namespace CustomUserManagement
                     Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddDatabaseDeveloperPageExceptionFilter();
+            
 
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
@@ -71,8 +72,9 @@ namespace CustomUserManagement
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+           
             app.UseRouting();
+           
             app.UseAuthentication();
             app.UseAuthorization();
 

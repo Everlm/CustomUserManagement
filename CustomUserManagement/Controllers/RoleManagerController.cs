@@ -7,10 +7,12 @@ using Microsoft.EntityFrameworkCore;
 using CustomUserManagement.Models;
 using CustomUserManagement.Utilities;
 using System;
+using CustomUserManagement.Enums;
+using CustomUserManagement.Extensions;
 
 namespace CustomUserManagement.Controllers
 {
-    public class RoleManagerController : Controller
+    public class RoleManagerController : BaseController
     {
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly UserManager<ApplicationUser> userManager;
@@ -37,6 +39,7 @@ namespace CustomUserManagement.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateRole(CreateRoleViewModel Model)
         {
+
             if (ModelState.IsValid)
             {
                 IdentityRole identityRole = new IdentityRole
@@ -46,15 +49,25 @@ namespace CustomUserManagement.Controllers
 
                 IdentityResult result = await roleManager.CreateAsync(identityRole);
 
+
                 if (result.Succeeded)
                 {
+
+                    Notify("Data saved successfully");
                     return RedirectToAction("ListRoles");
+
+
+                }
+                else
+                {
+                    Notify("Could not delete data!", notificationType: NotificationType.error);
                 }
 
                 foreach (IdentityError error in result.Errors)
                 {
                     ModelState.AddModelError("", error.Description);
                 }
+
             }
 
             return View(Model);
@@ -143,6 +156,21 @@ namespace CustomUserManagement.Controllers
 
             return View("ListRoles");
 
+        }
+
+        [AcceptVerbs("Get", "Post")]
+        public async Task<IActionResult> IsRoleUse(string name)
+        {
+            var role = await roleManager.FindByNameAsync(name);
+
+            if (role == null)
+            {
+                return Json(true);
+            }
+            else
+            {
+                return Json($"Email {name} is already exist");
+            }
         }
 
     }
