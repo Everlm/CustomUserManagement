@@ -7,20 +7,21 @@ using Microsoft.EntityFrameworkCore;
 using CustomUserManagement.Models;
 using CustomUserManagement.Utilities;
 using System;
-using CustomUserManagement.Enums;
-using CustomUserManagement.Extensions;
+using NToastNotify;
+using AspNetCoreHero.ToastNotification.Abstractions;
 
 namespace CustomUserManagement.Controllers
 {
-    public class RoleManagerController : BaseController
+    public class RoleManagerController : Controller
     {
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly UserManager<ApplicationUser> userManager;
-
-        public RoleManagerController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager)
+        private readonly INotyfService _toastNotification;
+        public RoleManagerController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, INotyfService toastNotification)
         {
             this.roleManager = roleManager;
             this.userManager = userManager;
+            this._toastNotification = toastNotification;
         }
 
         [HttpGet]
@@ -39,7 +40,6 @@ namespace CustomUserManagement.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateRole(CreateRoleViewModel Model)
         {
-
             if (ModelState.IsValid)
             {
                 IdentityRole identityRole = new IdentityRole
@@ -49,27 +49,23 @@ namespace CustomUserManagement.Controllers
 
                 IdentityResult result = await roleManager.CreateAsync(identityRole);
 
-
                 if (result.Succeeded)
                 {
-
-                    Notify("Data saved successfully");
+                    _toastNotification.Success($"A success {identityRole.Name}");
                     return RedirectToAction("ListRoles");
-
-
                 }
                 else
                 {
-                    Notify("Could not delete data!", notificationType: NotificationType.error);
+                    
+                    _toastNotification.Error($"An error occured");
+
                 }
 
                 foreach (IdentityError error in result.Errors)
                 {
                     ModelState.AddModelError("", error.Description);
                 }
-
             }
-
             return View(Model);
         }
 

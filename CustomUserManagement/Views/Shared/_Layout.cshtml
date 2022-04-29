@@ -10,8 +10,8 @@
     <title>@ViewData["Title"] - Custom User Management</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
-    @* <link rel="stylesheet" href="~/lib/limonte-sweetalert2/sweetalert2.min.css" />*@
-     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css"/>
+    <link rel="stylesheet" href="~/lib/FontAwesome/css/all.css" />
+
 </head>
 <body>
     <header>
@@ -34,7 +34,7 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="RoleManager" asp-action="ListRoles">Manage Roles</a>
                         </li>
                           <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="UserManager" asp-action="ListUsers">Manage User</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="UserManager" asp-action="Index">Manage User</a>
                         </li>
                     </ul>
                     <ul class="navbar-nav ml-auto">
@@ -80,11 +80,10 @@
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-   
-    @await Html.PartialAsync("_NotificationPartial") 
+
+    @await Component.InvokeAsync("NToastNotify")
+    @await Component.InvokeAsync("Notyf")
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

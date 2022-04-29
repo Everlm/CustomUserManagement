@@ -14,6 +14,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using NToastNotify;
+using AspNetCoreHero.ToastNotification;
+using AspNetCoreHero.ToastNotification.Extensions;
 
 namespace CustomUserManagement
 {
@@ -48,7 +51,19 @@ namespace CustomUserManagement
             })  .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddRazorPages().AddRazorRuntimeCompilation();
+            services.AddRazorPages().AddRazorRuntimeCompilation().AddNToastNotifyNoty(new NotyOptions
+            {
+                ProgressBar=true,
+                Timeout=5000
+            });
+
+            services.AddNotyf(config =>
+            {
+                config.DurationInSeconds = 5;
+                config.IsDismissable = true;
+                config.Position = NotyfPosition.TopRight;
+            });
+
             //services.AddMvc(config => {
             //    var policy = new AuthorizationPolicyBuilder()
             //                    .RequireAuthenticatedUser()
@@ -77,6 +92,9 @@ namespace CustomUserManagement
            
             app.UseAuthentication();
             app.UseAuthorization();
+            //NtoasNotify
+            app.UseNToastNotify();
+            app.UseNotyf();
 
             app.UseEndpoints(endpoints =>
             {

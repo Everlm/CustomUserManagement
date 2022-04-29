@@ -2,6 +2,7 @@
 
 namespace CustomUserManagement.Utilities
 {
+    //Custom Validation Attribute
     public class ValidEmailDomainAttribute: ValidationAttribute
     {
         private readonly string allowedDomain;

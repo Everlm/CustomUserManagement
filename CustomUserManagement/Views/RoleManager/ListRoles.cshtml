@@ -8,13 +8,15 @@
 <h1>All Roles</h1>
 <br />
 <p>
-    <a class="btn btn-outline-primary" asp-action="CreateRole" asp-controller="RoleManager">Add</a>
+    <a class="btn btn-outline-primary" asp-action="CreateRole" asp-controller="RoleManager">
+        <i class="fa-solid fa-plus"></i>&nbsp; Add
+    </a>
 </p>
 <div class="card">
 
 <table class="table">
     <thead>
-        <tr class="">
+        <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Name)
             </th>
@@ -36,10 +38,14 @@
                             <a href="#" class="btn btn-primary"
                            onclick="confirmDelete('@item.Id', false)">No</a>
                         </span>
-                         <a class="btn btn-outline-warning" asp-controller="RoleManager" asp-action="EditRole" asp-route-id="@item.Id">Edit</a>
+                         <a class="btn btn-outline-warning" asp-controller="RoleManager" asp-action="EditRole" asp-route-id="@item.Id">
+                             <i class="fa-solid fa-pen-to-square"></i>&nbsp;
+                         </a>
                         <span id="deleteSpan_@item.Id">
                             <a href="#" class="btn btn-outline-danger"
-                           onclick="confirmDelete('@item.Id', true)">Delete</a>
+                           onclick="confirmDelete('@item.Id', true)">
+                           <i class="fa-solid fa-trash-can"></i>&nbsp;
+                            </a>
                         </span>
                       @*  <a class="btn btn-outline-info" asp-controller="RoleManager" asp-action="DetailsRole" asp-route-id="@item.Id">Details </a>*@
                     </form>                  

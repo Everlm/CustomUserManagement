@@ -1,4 +1,4 @@
-﻿@using CustomUserManagement.ViewModels
+﻿@using CustomUserManagement.Models
 @model CreateRoleViewModel
 
 @{
@@ -18,7 +18,9 @@
             <div class="form-group row">
                 <div class="col-sm-10">
                     <button type="submit" class="btn btn-outline-success">Add</button>
-                    <a class="btn btn-outline-primary" asp-action="ListRoles">Back</a>
+                    <a class="btn btn-outline-primary" asp-action="ListRoles">
+                       <i class="fa-solid fa-right-from-bracket"></i>&nbsp; Back
+                    </a>
                 </div>
             </div>
         </form>

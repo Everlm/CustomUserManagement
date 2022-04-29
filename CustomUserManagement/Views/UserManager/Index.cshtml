@@ -1,0 +1,43 @@
+﻿@using CustomUserManagement.Models
+@model List<CustomUserManagement.Models.AccountViewModels.UserRoleViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h1>All Roles</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Full Name</th>
+            <th>Birth Date</th>
+            <th>City</th>
+            <th>Email</th>
+            <th>Roles</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Birthdate)
+                </td>
+                <td>
+                     @Html.DisplayFor(modelItem => item.City)
+                </td>
+                <td>
+                     @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>@string.Join(" , ", item.Roles.ToList())</td>
+                <td>
+                    <a class="btn btn-primary" asp-controller="RoleManager" asp-action="Manage" asp-route-userId="item.UserId">Manage Roles</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
