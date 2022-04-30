@@ -22,6 +22,7 @@ namespace CustomUserManagement.Controllers
             this._roleManager = roleManager; 
         }
 
+        [HttpGet]
         public async Task <IActionResult> Index()
         {
             var users = await _userManager.Users.ToListAsync();
@@ -45,7 +46,7 @@ namespace CustomUserManagement.Controllers
             return View(userRoleViewModel);
         }
 
-
+        [HttpGet]
         public async Task<IActionResult> ManageRole(string userId)
         {
             ViewBag.userId = userId;
@@ -55,15 +56,17 @@ namespace CustomUserManagement.Controllers
                 ViewBag.ErrorMessage = $"User with Id = {userId} cannot be found";
                 return NotFound();
             }
-            ViewBag.UserName = user.UserName;
+            ViewBag.FullName = user.FullName;
             var model = new List<ManageUserRolesViewModel>();
-            foreach (var role in _roleManager.Roles)
+
+            foreach (var role in await  _roleManager.Roles.ToListAsync())
             {
                 var userRolesViewModel = new ManageUserRolesViewModel
                 {
                     RoleId = role.Id,
                     RoleName = role.Name
                 };
+
                 if (await _userManager.IsInRoleAsync(user, role.Name))
                 {
                     userRolesViewModel.Selected = true;
@@ -72,6 +75,7 @@ namespace CustomUserManagement.Controllers
                 {
                     userRolesViewModel.Selected = false;
                 }
+
                 model.Add(userRolesViewModel);
             }
             return View(model);
@@ -101,7 +105,7 @@ namespace CustomUserManagement.Controllers
             return RedirectToAction("Index");
         }
 
-       
+       [HttpGet]
         private async Task<List<string>> GetUserRoles(ApplicationUser user)
         {
             return new List<string>(await _userManager.GetRolesAsync(user));
