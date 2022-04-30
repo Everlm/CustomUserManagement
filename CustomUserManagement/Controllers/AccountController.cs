@@ -1,5 +1,5 @@
 ﻿using CustomUserManagement.Models;
-using CustomUserManagement.ViewModels;
+using CustomUserManagement.Models.AccountViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -61,7 +61,7 @@ namespace CustomUserManagement.Controllers
         public IActionResult Login(string returnUrl)
         {
             //No null
-            LoginViewModel model = new LoginViewModel
+            LoginViewModel model = new()
             {
                 ReturnUrl = returnUrl,
 

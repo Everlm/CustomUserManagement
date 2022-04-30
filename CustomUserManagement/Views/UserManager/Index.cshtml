@@ -1,5 +1,5 @@
-﻿@using CustomUserManagement.Models
-@model List<CustomUserManagement.Models.AccountViewModels.UserRoleViewModel>
+﻿@using CustomUserManagement.Models.ManageViewModels
+@model List<CustomUserManagement.Models.ManageViewModels.UserRoleViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -25,7 +25,7 @@
                     @Html.DisplayFor(modelItem => item.FullName)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Birthdate)
+                    @Convert.ToDateTime(item.Birthdate).ToString("dd-MM-yyyy")
                 </td>
                 <td>
                      @Html.DisplayFor(modelItem => item.City)
@@ -35,7 +35,7 @@
                 </td>
                 <td>@string.Join(" , ", item.Roles.ToList())</td>
                 <td>
-                    <a class="btn btn-primary" asp-controller="RoleManager" asp-action="Manage" asp-route-userId="item.UserId">Manage Roles</a>
+                    <a class="btn btn-primary" asp-controller="UserManager" asp-action="ManageRole" asp-route-userId="item.UserId">Manage Roles</a>
                 </td>
             </tr>
         }

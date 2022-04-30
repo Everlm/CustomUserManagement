@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace CustomUserManagement.ViewModels
+namespace CustomUserManagement.Models.AccountViewModels
 {
     public class RegisterViewModel
     {

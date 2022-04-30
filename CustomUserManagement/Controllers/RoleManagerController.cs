@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using CustomUserManagement.ViewModels;
+using CustomUserManagement.Models.ManageViewModels;
 using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
@@ -14,20 +14,20 @@ namespace CustomUserManagement.Controllers
 {
     public class RoleManagerController : Controller
     {
-        private readonly RoleManager<IdentityRole> roleManager;
-        private readonly UserManager<ApplicationUser> userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly INotyfService _toastNotification;
         public RoleManagerController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, INotyfService toastNotification)
         {
-            this.roleManager = roleManager;
-            this.userManager = userManager;
+            this._roleManager = roleManager;
+            this._userManager = userManager;
             this._toastNotification = toastNotification;
         }
 
         [HttpGet]
         public async Task<IActionResult> ListRoles()
         {
-            return View(await roleManager.Roles.ToListAsync());
+            return View(await _roleManager.Roles.ToListAsync());
         }
 
 
@@ -42,24 +42,19 @@ namespace CustomUserManagement.Controllers
         {
             if (ModelState.IsValid)
             {
-                IdentityRole identityRole = new IdentityRole
+                IdentityRole identityRole = new()
                 {
                     Name = Model.RoleName
                 };
 
-                IdentityResult result = await roleManager.CreateAsync(identityRole);
+                IdentityResult result = await _roleManager.CreateAsync(identityRole);
 
                 if (result.Succeeded)
                 {
                     _toastNotification.Success($"A success {identityRole.Name}");
                     return RedirectToAction("ListRoles");
                 }
-                else
-                {
-                    
-                    _toastNotification.Error($"An error occured");
-
-                }
+                else _toastNotification.Error($"An error occured");
 
                 foreach (IdentityError error in result.Errors)
                 {
@@ -72,7 +67,7 @@ namespace CustomUserManagement.Controllers
         [HttpGet]
         public async Task<IActionResult> EditRole(string id)
         {
-            var role = await roleManager.FindByIdAsync(id);
+            var role = await _roleManager.FindByIdAsync(id);
 
             if (role == null)
             {
@@ -93,7 +88,7 @@ namespace CustomUserManagement.Controllers
         [HttpPost]
         public async Task<IActionResult> EditRole(EditRoleViewModel Model)
         {
-            var role = await roleManager.FindByIdAsync(Model.Id);
+            var role = await _roleManager.FindByIdAsync(Model.Id);
 
             if (role == null)
             {
@@ -106,7 +101,7 @@ namespace CustomUserManagement.Controllers
                 role.Name = Model.RoleName;
 
                 // Update el rol usando UpdateAsync
-                var result = await roleManager.UpdateAsync(role);
+                var result = await _roleManager.UpdateAsync(role);
 
                 if (result.Succeeded)
                 {
@@ -127,7 +122,7 @@ namespace CustomUserManagement.Controllers
         [HttpPost]
         public async Task<IActionResult> DeleteRole(string id)
         {
-            var role = await roleManager.FindByIdAsync(id);
+            var role = await _roleManager.FindByIdAsync(id);
 
             if (role == null)
             {
@@ -136,7 +131,7 @@ namespace CustomUserManagement.Controllers
             }
             else
             {
-                var result = await roleManager.DeleteAsync(role);
+                var result = await _roleManager.DeleteAsync(role);
 
                 if (result.Succeeded)
                 {
@@ -157,7 +152,7 @@ namespace CustomUserManagement.Controllers
         [AcceptVerbs("Get", "Post")]
         public async Task<IActionResult> IsRoleUse(string name)
         {
-            var role = await roleManager.FindByNameAsync(name);
+            var role = await _roleManager.FindByNameAsync(name);
 
             if (role == null)
             {

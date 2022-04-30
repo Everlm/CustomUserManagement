@@ -5,6 +5,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Services\**" />
+    <Compile Remove="ViewModels\**" />
+    <Compile Remove="Views\UserRole\**" />
+    <Content Remove="Services\**" />
+    <Content Remove="ViewModels\**" />
+    <Content Remove="Views\UserRole\**" />
+    <EmbeddedResource Remove="Services\**" />
+    <EmbeddedResource Remove="ViewModels\**" />
+    <EmbeddedResource Remove="Views\UserRole\**" />
+    <None Remove="Services\**" />
+    <None Remove="ViewModels\**" />
+    <None Remove="Views\UserRole\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AspNetCoreHero.ToastNotification" Version="1.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="5.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.0" />
@@ -20,12 +35,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="NToastNotify" Version="7.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Services\" />
-    <Folder Include="ViewModels\" />
-    <Folder Include="Views\UserRole\" />
   </ItemGroup>
 
 </Project>
