@@ -23,11 +23,11 @@
             }
             <div asp-validation-summary="All" class="text-danger"></div>
         </div>
-        <div class="card-footer">
-            <input type="submit" value="Update" class="btn btn-primary"
-                   style="width:auto" />
-            <a asp-action="EditUser" asp-route-id="@ViewBag.userId"
-               class="btn btn-primary" style="width:auto">Cancel</a>
+        <div class="card-footer" >
+            <input type="submit" value="Update" class="btn btn-outline-success" style="width:auto" />        
+            <a class="btn btn-outline-primary" asp-action="Index">
+                <i class="fa-solid fa-right-from-bracket"></i>&nbsp; Back
+            </a>
         </div>
     </div>
 </form>

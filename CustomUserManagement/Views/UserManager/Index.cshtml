@@ -3,9 +3,17 @@
 
 @{
     ViewData["Title"] = "Index";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<h1>All Roles</h1>
+
+<br />
+<h1>All Users</h1>
+<br />
+<p>
+    <a class="btn btn-outline-primary" asp-action="CreateRole" asp-controller="RoleManager">
+        <i class="fa-solid fa-plus"></i>&nbsp; Add
+    </a>
+</p>
+<div class="card">
 <table class="table">
     <thead>
         <tr>
@@ -28,16 +36,25 @@
                     @Convert.ToDateTime(item.Birthdate).ToString("dd-MM-yyyy")
                 </td>
                 <td>
-                     @Html.DisplayFor(modelItem => item.City)
+                    @Html.DisplayFor(modelItem => item.City)
                 </td>
                 <td>
-                     @Html.DisplayFor(modelItem => item.Email)
+                    @Html.DisplayFor(modelItem => item.Email)
                 </td>
                 <td>@string.Join(" , ", item.Roles.ToList())</td>
-                <td>
-                    <a class="btn btn-primary" asp-controller="UserManager" asp-action="ManageRole" asp-route-userId="@item.UserId">Manage Roles</a>
+                <td class="">
+                    <a class="btn btn-outline-primary" asp-controller="UserManager" asp-action="ManageRole" asp-route-userId="@item.UserId">
+                       <i class="fa-regular fa-address-card"></i>&nbsp;
+                    </a>
+                    <a class="btn btn-outline-warning" asp-controller="RoleManager" asp-action="EditRole" asp-route-id="@item.UserId">
+                        <i class="fa-solid fa-pen-to-square"></i>&nbsp;
+                    </a>
+                    <a href="#" class="btn btn-outline-danger" onclick="confirmDelete('@item.UserId', true)">
+                        <i class="fa-solid fa-trash-can"></i>&nbsp;
+                    </a>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+</div>

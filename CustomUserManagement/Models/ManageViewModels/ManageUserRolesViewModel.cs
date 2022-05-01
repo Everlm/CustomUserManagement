@@ -1,4 +1,6 @@
-﻿namespace CustomUserManagement.Models.ManageViewModels
+﻿using System.Collections.Generic;
+
+namespace CustomUserManagement.Models.ManageViewModels
 {
     public class ManageUserRolesViewModel
     {

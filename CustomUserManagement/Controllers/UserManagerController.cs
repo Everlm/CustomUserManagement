@@ -16,14 +16,14 @@ namespace CustomUserManagement.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
 
-        public UserManagerController(UserManager<ApplicationUser> userManager,RoleManager<IdentityRole> roleManager)
+        public UserManagerController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             this._userManager = userManager;
-            this._roleManager = roleManager; 
+            this._roleManager = roleManager;
         }
 
         [HttpGet]
-        public async Task <IActionResult> Index()
+        public async Task<IActionResult> Index()
         {
             var users = await _userManager.Users.ToListAsync();
             var userRoleViewModel = new List<UserRoleViewModel>();
@@ -59,7 +59,7 @@ namespace CustomUserManagement.Controllers
             ViewBag.FullName = user.FullName;
             var model = new List<ManageUserRolesViewModel>();
 
-            foreach (var role in await  _roleManager.Roles.ToListAsync())
+            foreach (var role in await _roleManager.Roles.ToListAsync())
             {
                 var userRolesViewModel = new ManageUserRolesViewModel
                 {
@@ -105,7 +105,7 @@ namespace CustomUserManagement.Controllers
             return RedirectToAction("Index");
         }
 
-       [HttpGet]
+        [HttpGet]
         private async Task<List<string>> GetUserRoles(ApplicationUser user)
         {
             return new List<string>(await _userManager.GetRolesAsync(user));
