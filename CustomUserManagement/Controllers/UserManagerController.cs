@@ -13,7 +13,7 @@ using System.Data;
 
 namespace CustomUserManagement.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public class UserManagerController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -40,14 +40,12 @@ namespace CustomUserManagement.Controllers
                     Birthdate = user.Birthdate,
                     City = user.City,
                     Email = user.Email,
-
-                    Roles = await GetUserRoles(user)
+                    Roles = await _userManager.GetRolesAsync(user)
                 };
                 userRoleViewModel.Add(thisViewModel);
-
             }
             return View(userRoleViewModel);
-           
+
         }
 
         [HttpGet]
@@ -110,17 +108,100 @@ namespace CustomUserManagement.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> EditUser(ManageUserRolesViewModel model)
+        public async Task<IActionResult> EditUser(string id)
         {
+            var user = await _userManager.FindByIdAsync(id);
 
+            if (user == null)
+            {
+                ViewBag.ErrorMessage = $"User with Id = {id} cannot be found";
+                return View("NotFound");
+            }
+
+            // retunr  list of user Claims
+            var userClaims = await _userManager.GetClaimsAsync(user);
+            // return list of user Roles
+            var userRoles = await _userManager.GetRolesAsync(user);
+
+            var model = new EditUserViewModel
+            {
+                Id = user.Id,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                Birthdate = user.Birthdate,
+                FullName = user.FullName,
+                City = user.City,
+                Claims = userClaims.Select(c => c.Value).ToList(),
+                Roles = userRoles
+            };
 
             return View(model);
         }
 
-        [HttpGet]
-        private async Task<List<string>> GetUserRoles(ApplicationUser user)
+        [HttpPost]
+        public async Task<IActionResult> EditUser(EditUserViewModel model)
         {
-            return new List<string>(await _userManager.GetRolesAsync(user));
+            if (ModelState.IsValid)
+            {
+
+                var user = await _userManager.FindByIdAsync(model.Id);
+
+                if (user == null)
+                {
+                    ViewBag.ErrorMessage = $"User with Id = {model.Id} cannot be found";
+                    return NotFound();
+                }
+                else
+                {
+                    user.Email = model.Email;
+                    user.PhoneNumber = model.PhoneNumber;
+                    user.Birthdate = model.Birthdate;
+                    user.FullName = model.FullName;
+                    user.City = model.City;
+
+                    var result = await _userManager.UpdateAsync(user);
+
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("Index");
+                    }
+
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError("", error.Description);
+                    }
+                }
+
+            }
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteUser(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+
+            if (user == null)
+            {
+                ViewBag.ErrorMessage = $"User with Id = {id} cannot be found";
+                return View("NotFound");
+            }
+            else
+            {
+                var result = await _userManager.DeleteAsync(user);
+
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Index");
+                }
+
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+
+                return View("Index");
+            }
         }
 
     }

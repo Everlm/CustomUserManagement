@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace CustomUserManagement.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public class RoleManagerController : Controller
     {
         private readonly RoleManager<IdentityRole> _roleManager;
@@ -103,7 +103,7 @@ namespace CustomUserManagement.Controllers
             {
                 role.Name = Model.RoleName;
 
-                // Update el rol usando UpdateAsync
+                // Update  rol using UpdateAsync
                 var result = await _roleManager.UpdateAsync(role);
 
                 if (result.Succeeded)
