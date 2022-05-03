@@ -1,5 +1,6 @@
 ﻿using CustomUserManagement.Models;
 using CustomUserManagement.Models.AccountViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -44,6 +45,12 @@ namespace CustomUserManagement.Controllers
 
                 if (result.Succeeded)
                 {
+                    //if is admin return index
+                    if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                    {
+                        return RedirectToAction("Index", "UserManager");
+                    }
+
                     await signInManager.SignInAsync(user, isPersistent: false);
                     return RedirectToAction("index", "home");
                 }
@@ -106,7 +113,7 @@ namespace CustomUserManagement.Controllers
             return RedirectToAction("index", "home");
         }
 
-        //Valida si el correo ya existe remotamente
+        //Email exist valid
         [AcceptVerbs("Get", "Post")]
         public async Task<IActionResult> IsEmailInUse(string email)
         {
@@ -120,6 +127,13 @@ namespace CustomUserManagement.Controllers
             {
                 return Json($"Email {email} is already in use");
             }
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult AccesDenied()
+        {
+            return View();
         }
     }
 }

@@ -8,9 +8,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using System;
 using CustomUserManagement.Models.ManageViewModels;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace CustomUserManagement.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class UserManagerController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -44,6 +47,7 @@ namespace CustomUserManagement.Controllers
 
             }
             return View(userRoleViewModel);
+           
         }
 
         [HttpGet]
@@ -106,9 +110,18 @@ namespace CustomUserManagement.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> EditUser(ManageUserRolesViewModel model)
+        {
+
+
+            return View(model);
+        }
+
+        [HttpGet]
         private async Task<List<string>> GetUserRoles(ApplicationUser user)
         {
             return new List<string>(await _userManager.GetRolesAsync(user));
         }
+
     }
 }

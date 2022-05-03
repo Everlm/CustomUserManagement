@@ -9,9 +9,11 @@ using CustomUserManagement.Utilities;
 using System;
 using NToastNotify;
 using AspNetCoreHero.ToastNotification.Abstractions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CustomUserManagement.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class RoleManagerController : Controller
     {
         private readonly RoleManager<IdentityRole> _roleManager;
@@ -24,6 +26,7 @@ namespace CustomUserManagement.Controllers
             this._toastNotification = toastNotification;
         }
 
+        
         [HttpGet]
         public async Task<IActionResult> ListRoles()
         {
