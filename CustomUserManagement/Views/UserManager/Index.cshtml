@@ -1,5 +1,5 @@
 ﻿@using CustomUserManagement.Models.ManageViewModels
-@model List<CustomUserManagement.Models.ManageViewModels.UserRoleViewModel>
+@model List<CustomUserManagement.Models.ManageViewModels.UserListViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -44,18 +44,6 @@
                         </td>
                         <td>@string.Join(" , ", item.Roles.ToList())</td>
                         <td>
-                            <div class="dropdown show">
-                                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Dropdown link
-                                </a>
-
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                    <a class="dropdown-item" href="#">Action</a>
-                                    <a class="dropdown-item" href="#">Another action</a>
-                                    <a class="dropdown-item" href="#">Something else here</a>
-                                </div>
-                            </div>
-
                             <form method="post" asp-action="DeleteUser" asp-route-id="@item.UserId">
                                 <a class="btn btn-outline-warning" asp-controller="UserManager" asp-action="EditUser" asp-route-id="@item.UserId">
                                     <i class="fa-solid fa-pen-to-square"></i>&nbsp;

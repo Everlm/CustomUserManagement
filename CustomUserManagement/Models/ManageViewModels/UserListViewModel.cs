@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace CustomUserManagement.Models.ManageViewModels
 {
-    public class UserRoleViewModel
+    public class UserListViewModel
     {
         public string UserId { get; set; }
         public string FullName { get; set; }

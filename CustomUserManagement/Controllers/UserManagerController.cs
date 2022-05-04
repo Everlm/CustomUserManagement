@@ -29,11 +29,11 @@ namespace CustomUserManagement.Controllers
         public async Task<IActionResult> Index()
         {
             var users = await _userManager.Users.ToListAsync();
-            var userRoleViewModel = new List<UserRoleViewModel>();
+            var userRoleViewModel = new List<UserListViewModel>();
 
             foreach (ApplicationUser user in users)
             {
-                UserRoleViewModel thisViewModel = new UserRoleViewModel
+                UserListViewModel thisViewModel = new UserListViewModel
                 {
                     UserId = user.Id,
                     FullName = user.FullName,
@@ -91,14 +91,18 @@ namespace CustomUserManagement.Controllers
             {
                 return View();
             }
+
             var roles = await _userManager.GetRolesAsync(user);
             var result = await _userManager.RemoveFromRolesAsync(user, roles);
+
             if (!result.Succeeded)
             {
                 ModelState.AddModelError("", "Cannot remove user existing roles");
                 return View(model);
             }
+
             result = await _userManager.AddToRolesAsync(user, model.Where(x => x.Selected).Select(y => y.RoleName));
+
             if (!result.Succeeded)
             {
                 ModelState.AddModelError("", "Cannot add selected roles to user");
