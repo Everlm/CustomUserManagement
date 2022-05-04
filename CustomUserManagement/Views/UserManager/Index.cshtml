@@ -6,67 +6,84 @@
 }
 
 <br />
-<h1>All Users</h1>
-<br />
-<p>
-    <a class="btn btn-outline-primary" asp-action="register" asp-controller="account">
-        <i class="fa-solid fa-plus"></i>&nbsp; Add
-    </a>
-</p>
 <div class="card">
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Full Name</th>
-                <th>Birth Date</th>
-                <th>City</th>
-                <th>Email</th>
-                <th>Roles</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
+    <div class="card-header">
+        <h5>All users</h5>
+    </div>
+    <div class="card-body">
+        <a class="btn btn-outline-primary" asp-action="register" asp-controller="account">
+            <i class="fa-solid fa-plus"></i>&nbsp; Add
+        </a>
+        <hr />
+        <table class="table">
+            <thead>
                 <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.FullName)
-                    </td>
-                    <td>
-                        @Convert.ToDateTime(item.Birthdate).ToString("dd-MM-yyyy")
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.City)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Email)
-                    </td>
-                    <td>@string.Join(" , ", item.Roles.ToList())</td>
-                    <td>
-                        <form method="post" asp-action="DeleteUser" asp-route-id="@item.UserId">
-                            <a class="btn btn-outline-warning" asp-controller="UserManager" asp-action="EditUser" asp-route-id="@item.UserId">
-                                <i class="fa-solid fa-pen-to-square"></i>&nbsp;
-                            </a>
-
-                            <a class="btn btn-outline-primary" asp-controller="UserManager" asp-action="ManageRole" asp-route-userId="@item.UserId">
-                                <i class="fa-regular fa-address-card"></i>&nbsp;
-                            </a>
-                            <span id="confirmDeleteSpan_@item.UserId" style="display:none">
-                                <span>Are you sure you want to delete?</span>
-                                <button type="submit" class="btn btn-danger">Yes</button>
-                                <a href="#" class="btn btn-primary"
-                               onclick="confirmDelete('@item.UserId', false)">No</a>
-                            </span>
-
-                            <span id="deleteSpan_@item.UserId">
-                                <a href="#" class="btn btn-outline-danger" onclick="confirmDelete('@item.UserId', true)">
-                                    <i class="fa-solid fa-trash-can"></i>&nbsp;
-                                </a>
-                            </span>
-                        </form>
-                    </td>
+                    <th>Full Name</th>
+                    <th>Birth Date</th>
+                    <th>City</th>
+                    <th>Email</th>
+                    <th>Roles</th>
+                    <th>Action</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FullName)
+                        </td>
+                        <td>
+                            @Convert.ToDateTime(item.Birthdate).ToString("dd-MM-yyyy")
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.City)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Email)
+                        </td>
+                        <td>@string.Join(" , ", item.Roles.ToList())</td>
+                        <td>
+                            <div class="dropdown show">
+                                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Dropdown link
+                                </a>
+
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                    <a class="dropdown-item" href="#">Action</a>
+                                    <a class="dropdown-item" href="#">Another action</a>
+                                    <a class="dropdown-item" href="#">Something else here</a>
+                                </div>
+                            </div>
+
+                            <form method="post" asp-action="DeleteUser" asp-route-id="@item.UserId">
+                                <a class="btn btn-outline-warning" asp-controller="UserManager" asp-action="EditUser" asp-route-id="@item.UserId">
+                                    <i class="fa-solid fa-pen-to-square"></i>&nbsp;
+                                </a>
+
+                                <a class="btn btn-outline-primary" asp-controller="UserManager" asp-action="ManageRole" asp-route-userId="@item.UserId">
+                                    <i class="fa-regular fa-address-card"></i>&nbsp;
+                                </a>
+                                <span id="confirmDeleteSpan_@item.UserId" style="display:none">
+                                    <span>Are you sure you want to delete?</span>
+                                    <button type="submit" class="btn btn-danger">Yes</button>
+                                    <a href="#" class="btn btn-primary"
+                                   onclick="confirmDelete('@item.UserId', false)">No</a>
+                                </span>
+
+                                <span id="deleteSpan_@item.UserId">
+                                    <a href="#" class="btn btn-outline-danger" onclick="confirmDelete('@item.UserId', true)">
+                                        <i class="fa-solid fa-trash-can"></i>&nbsp;
+                                    </a>
+                                </span>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
+@section Scripts {
+<script src="~/js/site.js"></script>
+}

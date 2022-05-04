@@ -89,7 +89,7 @@ namespace CustomUserManagement.Controllers
 
                 if (result.Succeeded)
                 {
-                    //Verificamos la Url si es local
+                    //Valid if is local
                     if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                     {
                         return Redirect(returnUrl);
