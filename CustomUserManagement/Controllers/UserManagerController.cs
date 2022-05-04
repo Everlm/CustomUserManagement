@@ -52,16 +52,19 @@ namespace CustomUserManagement.Controllers
         public async Task<IActionResult> ManageRole(string userId)
         {
             ViewBag.userId = userId;
+
             var user = await _userManager.FindByIdAsync(userId);
+
             if (user == null)
             {
                 ViewBag.ErrorMessage = $"User with Id = {userId} cannot be found";
                 return NotFound();
             }
+
             ViewBag.FullName = user.FullName;
             var model = new List<ManageUserRolesViewModel>();
 
-            foreach (var role in await _roleManager.Roles.ToListAsync())
+            foreach (var role in _roleManager.Roles)
             {
                 var userRolesViewModel = new ManageUserRolesViewModel
                 {
@@ -80,6 +83,7 @@ namespace CustomUserManagement.Controllers
 
                 model.Add(userRolesViewModel);
             }
+
             return View(model);
         }
 
@@ -87,8 +91,10 @@ namespace CustomUserManagement.Controllers
         public async Task<IActionResult> ManageRole(List<ManageUserRolesViewModel> model, string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
+
             if (user == null)
             {
+               
                 return View();
             }
 
@@ -101,14 +107,16 @@ namespace CustomUserManagement.Controllers
                 return View(model);
             }
 
-            result = await _userManager.AddToRolesAsync(user, model.Where(x => x.Selected).Select(y => y.RoleName));
+            result = await _userManager.AddToRolesAsync(user,
+                model.Where(x => x.Selected).Select(y => y.RoleName));
 
             if (!result.Succeeded)
             {
                 ModelState.AddModelError("", "Cannot add selected roles to user");
                 return View(model);
             }
-            return RedirectToAction("Index");
+
+            return RedirectToAction("EditUser", new { Id = userId });
         }
 
         [HttpGet]

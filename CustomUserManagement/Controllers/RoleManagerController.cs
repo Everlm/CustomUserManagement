@@ -147,9 +147,7 @@ namespace CustomUserManagement.Controllers
                     ModelState.AddModelError("", error.Description);
                 }
             }
-
             return View("ListRoles");
-
         }
 
         [AcceptVerbs("Get", "Post")]

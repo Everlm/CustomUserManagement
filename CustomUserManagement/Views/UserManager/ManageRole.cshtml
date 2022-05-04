@@ -1,12 +1,12 @@
 ﻿@model List<ManageUserRolesViewModel>
 @{
     ViewData["Title"] = "Manage";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+     var userId = ViewBag.userId;
 }
 <form method="post">
     <div class="card">
         <div class="card-header">
-            <h2>Manage User Roles</h2>
+            <h4>Manage User Roles</h4>
             Add/Remove Roles for User / @ViewBag.FullName
         </div>
         <div class="card-body">
@@ -25,7 +25,7 @@
         </div>
         <div class="card-footer" >
             <input type="submit" value="Update" class="btn btn-outline-success" style="width:auto" />        
-            <a class="btn btn-outline-primary" asp-action="Index">
+            <a class="btn btn-outline-primary" asp-action="EditUser" asp-route-id="@userId">
                 <i class="fa-solid fa-right-from-bracket"></i>&nbsp; Back
             </a>
         </div>

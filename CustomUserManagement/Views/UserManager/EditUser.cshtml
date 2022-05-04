@@ -44,14 +44,15 @@
 
                         <div class="form-group row">
                             <div class="col-sm-10">
-                                <button type="submit" class="btn btn-primary">Update</button>
-                                <a asp-action="Index" class="btn btn-primary">Cancel</a>
+                                <button type="submit" class="btn btn-outline-success">Update</button>
+                                <a asp-action="Index" class="btn btn-outline-primary">
+                                    <i class="fa-solid fa-right-from-bracket"></i>&nbsp; Back
+                                </a>
                             </div>
                         </div>
                     </div>
-                    <div class="col-6 col-md-4 flex-column">
+                    <div class="col-6 col-md-4">
                         <br />
-
                         <div class="card mt-lg-3">
                             <div class="card-header">
                                 <h5>User Roles</h5>
@@ -70,12 +71,11 @@
                                 }
                             </div>
                             <div class="card-footer">
-                                <a href="#" style="width:auto" class="btn btn-primary">
+                                <a asp-action="ManageRole" asp-controller="UserManager" asp-route-userid="@Model.Id"  style="width:auto" class="btn btn-outline-primary">
                                     Manage Roles
                                 </a>
                             </div>
                         </div>
-
                         <div class="card mt-2">
                             <div class="card-header">
                                 <h5>User Claims</h5>
@@ -94,7 +94,7 @@
                                 }
                             </div>
                             <div class="card-footer">
-                                <a href="#" style="width:auto" class="btn btn-primary">
+                                <a href="#" style="width:auto" class="btn btn-outline-primary">
                                     Manage Claims
                                 </a>
                             </div>

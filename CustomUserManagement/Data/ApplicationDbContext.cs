@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace CustomUserManagement.Data
 {
@@ -12,7 +13,7 @@ namespace CustomUserManagement.Data
 
         }
 
-        //Cambiamos el nombre de las tablas creadas en la base de datos por Identity
+        //Change tables name identity
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -45,6 +46,12 @@ namespace CustomUserManagement.Data
             {
                 entity.ToTable("UserTokens");
             });
+
+            //Valid not delete Role while is it used
+            foreach (var foreignKey in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
+            {
+                foreignKey.DeleteBehavior = DeleteBehavior.Restrict;
+            }
         }
     }
 }
