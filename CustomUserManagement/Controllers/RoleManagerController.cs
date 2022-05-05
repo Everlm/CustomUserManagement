@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace CustomUserManagement.Controllers
 {
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public class RoleManagerController : Controller
     {
         private readonly RoleManager<IdentityRole> _roleManager;
@@ -32,7 +32,6 @@ namespace CustomUserManagement.Controllers
         {
             return View(await _roleManager.Roles.ToListAsync());
         }
-
 
         [HttpGet]
         public IActionResult CreateRole()
@@ -69,6 +68,7 @@ namespace CustomUserManagement.Controllers
         }
 
         [HttpGet]
+        //[Authorize(Policy ="EditRolePolicy")]
         public async Task<IActionResult> EditRole(string id)
         {
             var role = await _roleManager.FindByIdAsync(id);
@@ -126,6 +126,7 @@ namespace CustomUserManagement.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "DeleteRolePolicy")]
         public async Task<IActionResult> DeleteRole(string id)
         {
             var role = await _roleManager.FindByIdAsync(id);
@@ -167,6 +168,13 @@ namespace CustomUserManagement.Controllers
             {
                 return Json($"Email {name} is already exist");
             }
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult AccessDenied()
+        {
+            return View();
         }
 
     }

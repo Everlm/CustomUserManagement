@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using NToastNotify;
 using AspNetCoreHero.ToastNotification;
 using AspNetCoreHero.ToastNotification.Extensions;
+using Microsoft.AspNetCore.Http;
 
 namespace CustomUserManagement
 {
@@ -63,6 +64,28 @@ namespace CustomUserManagement
                 config.IsDismissable = true;
                 config.Position = NotyfPosition.TopRight;
             });
+            
+            //Claims policy
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("DeleteRolePolicy",
+                    policy => policy.RequireClaim("Delete Role")
+                                    .RequireClaim("Create Role"));
+
+                options.AddPolicy("EditRolePolicy",
+                  policy => policy.RequireClaim("Edit Role"));
+                                 
+
+                options.AddPolicy("AdminRolePolicy",
+                   policy => policy.RequireRole("Admin", "New"));
+            });
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.AccessDeniedPath = new PathString("/RoleManager/AccessDenied");
+            });
+            //Roles Policy
+
 
             //services.AddMvc(config => {
             //    var policy = new AuthorizationPolicyBuilder()

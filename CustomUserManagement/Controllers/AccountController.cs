@@ -133,11 +133,6 @@ namespace CustomUserManagement.Controllers
             }
         }
 
-        [HttpGet]
-        [AllowAnonymous]
-        public IActionResult AccesDenied()
-        {
-            return View();
-        }
+       
     }
 }

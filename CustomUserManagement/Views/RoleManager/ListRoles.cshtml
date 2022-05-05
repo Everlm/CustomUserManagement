@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<IdentityRole>
-
+@inject IAuthorizationService authorizationService;
 @{
     ViewBag.Title = "All Roles";
 }
@@ -14,47 +14,56 @@
 </p>
 <div class="card">
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+    <table class="table">
+        <thead>
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td> 
-                   <form asp-action="DeleteRole" asp-route-id="@item.Id" method="post">
-                        <span id="confirmDeleteSpan_@item.Id" style="display:none">
-                            <span>Confirm delete @item.Name?</span>
-                            <button type="submit" class="btn btn-danger">Yes</button>
-                            <a href="#" class="btn btn-primary"
-                           onclick="confirmDelete('@item.Id', false)">No</a>
-                        </span>
-                         <a class="btn btn-outline-warning" asp-controller="RoleManager" asp-action="EditRole" asp-route-id="@item.Id">
-                             <i class="fa-solid fa-pen-to-square"></i>&nbsp;
-                         </a>
-                        <span id="deleteSpan_@item.Id">
-                            <a href="#" class="btn btn-outline-danger"
-                           onclick="confirmDelete('@item.Id', true)">
-                           <i class="fa-solid fa-trash-can"></i>&nbsp;
-                            </a>
-                        </span>
-                      @*  <a class="btn btn-outline-info" asp-controller="RoleManager" asp-action="DetailsRole" asp-route-id="@item.Id">Details </a>*@
-                    </form>                  
-                </td>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        <form asp-action="DeleteRole" asp-route-id="@item.Id" method="post">
+                            <span id="confirmDeleteSpan_@item.Id" style="display:none">
+                                <span>Confirm delete @item.Name?</span>
+                                <button type="submit" class="btn btn-danger">Yes</button>
+                                <a href="#" class="btn btn-primary"
+                               onclick="confirmDelete('@item.Id', false)">No</a>
+                            </span>
+
+                            @* Autorization using Policy*@
+                            @if ((await authorizationService.AuthorizeAsync(User, "EditRolePolicy")).Succeeded)
+                            {
+                                <a class="btn btn-outline-warning" asp-controller="RoleManager" asp-action="EditRole" asp-route-id="@item.Id">
+                                    <i class="fa-solid fa-pen-to-square"></i>&nbsp;
+                                </a>
+                            }
+                             <a class="btn btn-outline-warning" asp-controller="RoleManager" asp-action="EditRole" asp-route-id="@item.Id">
+                                    <i class="fa-solid fa-pen-to-square"></i>&nbsp;
+                                </a>
+
+                            <span id="deleteSpan_@item.Id">
+                                <a href="#" class="btn btn-outline-danger"
+                               onclick="confirmDelete('@item.Id', true)">
+                                    <i class="fa-solid fa-trash-can"></i>&nbsp;
+                                </a>
+                            </span>
+                            @*  <a class="btn btn-outline-info" asp-controller="RoleManager" asp-action="DetailsRole" asp-route-id="@item.Id">Details </a>*@
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
 
 @section Scripts {
-    <script src="~/js/site.js"></script>
+<script src="~/js/site.js"></script>
 }
