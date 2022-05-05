@@ -41,6 +41,7 @@ namespace CustomUserManagement.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateRole(CreateRoleViewModel Model)
         {
             if (ModelState.IsValid)
@@ -89,6 +90,7 @@ namespace CustomUserManagement.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditRole(EditRoleViewModel Model)
         {
             var role = await _roleManager.FindByIdAsync(Model.Id);
@@ -123,6 +125,7 @@ namespace CustomUserManagement.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteRole(string id)
         {
             var role = await _roleManager.FindByIdAsync(id);
@@ -151,6 +154,7 @@ namespace CustomUserManagement.Controllers
         }
 
         [AcceptVerbs("Get", "Post")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> IsRoleUse(string name)
         {
             var role = await _roleManager.FindByNameAsync(name);

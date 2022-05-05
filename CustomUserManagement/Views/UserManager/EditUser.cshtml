@@ -13,7 +13,6 @@
         <form method="post">
             <div class="container-fluid">
                 <div class="row justify-content-around">
-
                     <div class=col-6>
                         <div asp-validation-summary="All" class="text-danger"></div>
                         <div class="form-group">
@@ -51,7 +50,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-6 col-md-4">
+                    <div class="col-xs-12">
                         <br />
                         <div class="card mt-lg-3">
                             <div class="card-header">
@@ -71,7 +70,7 @@
                                 }
                             </div>
                             <div class="card-footer">
-                                <a asp-action="ManageRole" asp-controller="UserManager" asp-route-userid="@Model.Id"  style="width:auto" class="btn btn-outline-primary">
+                                <a asp-action="ManageUserRoles" asp-route-userid="@Model.Id"  style="width:auto" class="btn btn-outline-primary">
                                     Manage Roles
                                 </a>
                             </div>
@@ -94,7 +93,7 @@
                                 }
                             </div>
                             <div class="card-footer">
-                                <a href="#" style="width:auto" class="btn btn-outline-primary">
+                                <a asp-action="ManageUserClaims" asp-route-Userid="@Model.Id" style="width:auto" class="btn btn-outline-primary">
                                     Manage Claims
                                 </a>
                             </div>
