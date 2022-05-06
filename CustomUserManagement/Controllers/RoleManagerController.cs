@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace CustomUserManagement.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Policy = "AdminRolePolicy")]
     public class RoleManagerController : Controller
     {
         private readonly RoleManager<IdentityRole> _roleManager;
@@ -25,7 +25,6 @@ namespace CustomUserManagement.Controllers
             this._userManager = userManager;
             this._toastNotification = toastNotification;
         }
-
         
         [HttpGet]
         public async Task<IActionResult> ListRoles()
@@ -40,7 +39,7 @@ namespace CustomUserManagement.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+       
         public async Task<IActionResult> CreateRole(CreateRoleViewModel Model)
         {
             if (ModelState.IsValid)
@@ -90,7 +89,7 @@ namespace CustomUserManagement.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+       
         public async Task<IActionResult> EditRole(EditRoleViewModel Model)
         {
             var role = await _roleManager.FindByIdAsync(Model.Id);
@@ -125,8 +124,8 @@ namespace CustomUserManagement.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Policy = "DeleteRolePolicy")]
+       
+        //[Authorize(Policy = "DeleteRolePolicy")]
         public async Task<IActionResult> DeleteRole(string id)
         {
             var role = await _roleManager.FindByIdAsync(id);
@@ -155,7 +154,7 @@ namespace CustomUserManagement.Controllers
         }
 
         [AcceptVerbs("Get", "Post")]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> IsRoleUse(string name)
         {
             var role = await _roleManager.FindByNameAsync(name);

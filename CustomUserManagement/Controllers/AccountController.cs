@@ -26,7 +26,7 @@ namespace CustomUserManagement.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+       
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
@@ -53,7 +53,7 @@ namespace CustomUserManagement.Controllers
                     }
 
                     await signInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToAction("index", "home");
+                    return RedirectToAction("Index", "home");
                 }
 
                 foreach (var error in result.Errors)
@@ -79,7 +79,7 @@ namespace CustomUserManagement.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public async Task<IActionResult> Login(LoginViewModel model, string returnUrl)
         {
             if (ModelState.IsValid)
@@ -109,7 +109,7 @@ namespace CustomUserManagement.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+       
         public async Task<IActionResult> Logout()
         {
             await signInManager.SignOutAsync();
@@ -118,7 +118,7 @@ namespace CustomUserManagement.Controllers
 
         //Email exist valid
         [AcceptVerbs("Get", "Post")]
-        [ValidateAntiForgeryToken]
+       
         public async Task<IActionResult> IsEmailInUse(string email)
         {
             var user = await userManager.FindByEmailAsync(email);

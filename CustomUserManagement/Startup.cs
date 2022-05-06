@@ -18,6 +18,8 @@ using NToastNotify;
 using AspNetCoreHero.ToastNotification;
 using AspNetCoreHero.ToastNotification.Extensions;
 using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
+using CustomUserManagement.Security;
 
 namespace CustomUserManagement
 {
@@ -39,7 +41,6 @@ namespace CustomUserManagement
                     Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddDatabaseDeveloperPageExceptionFilter();
-            
 
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
@@ -47,15 +48,15 @@ namespace CustomUserManagement
                 options.Password.RequiredLength = 10;
                 options.Password.RequiredUniqueChars = 3;
                 options.Password.RequireNonAlphanumeric = false;
-                
 
-            })  .AddEntityFrameworkStores<ApplicationDbContext>()
+
+            }).AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
             services.AddRazorPages().AddRazorRuntimeCompilation().AddNToastNotifyNoty(new NotyOptions
             {
-                ProgressBar=true,
-                Timeout=5000
+                ProgressBar = true,
+                Timeout = 5000
             });
 
             services.AddNotyf(config =>
@@ -64,29 +65,44 @@ namespace CustomUserManagement
                 config.IsDismissable = true;
                 config.Position = NotyfPosition.TopRight;
             });
-            
+
             //Claims policy
             services.AddAuthorization(options =>
             {
+                //Claims Policy
                 options.AddPolicy("DeleteRolePolicy",
-                    policy => policy.RequireClaim("Delete Role")
-                                    .RequireClaim("Create Role"));
+                    policy => policy.RequireClaim("Delete Role"));
 
-                options.AddPolicy("EditRolePolicy",
-                  policy => policy.RequireClaim("Edit Role"));
-                                 
-
+                ////Roles Policy
                 options.AddPolicy("AdminRolePolicy",
-                   policy => policy.RequireRole("Admin", "New"));
+                    policy => policy.RequireRole("Admin", "SuperAdmin"));
+
+                //Custom Policys Admin
+                options.AddPolicy("EditRolePolicy", policy =>
+                       policy.AddRequirements(new ManageAdminRolesAndClaimsRequirement()));
+
+                //Policys whit conditions
+                //options.AddPolicy("EditRolePolicy", policy => policy.RequireAssertion(context =>
+                //context.User.IsInRole("Admin") &&
+                //context.User.HasClaim(claim => claim.Type == "Edit Role" && claim.Value == "true") ||
+                //context.User.IsInRole("Super Admin")));
+               
+                //options.AddPolicy("EditRolePolicy",
+                //  policy => policy.RequireClaim("Edit Role"/*, "false"*/));
+
             });
 
+            //Add service auth admin
+            services.AddSingleton<IAuthorizationHandler,
+               CanEditOnlyOtherAdminRolesAndClaimsHandler>();
+
+            //rute for view AccesDenied
             services.ConfigureApplicationCookie(options =>
             {
                 options.AccessDeniedPath = new PathString("/RoleManager/AccessDenied");
             });
-            //Roles Policy
 
-
+            //autethication run app
             //services.AddMvc(config => {
             //    var policy = new AuthorizationPolicyBuilder()
             //                    .RequireAuthenticatedUser()
@@ -110,9 +126,9 @@ namespace CustomUserManagement
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-           
+
             app.UseRouting();
-           
+
             app.UseAuthentication();
             app.UseAuthorization();
             //NtoasNotify

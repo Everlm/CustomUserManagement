@@ -14,7 +14,7 @@ using System.Security.Claims;
 
 namespace CustomUserManagement.Controllers
 {
-    //[Authorize(Roles = "Admin")]
+    //[Authorize(Policy = "AdminRolePolicy")]
     public class UserManagerController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -50,6 +50,7 @@ namespace CustomUserManagement.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "EditRolePolicy")]
         public async Task<IActionResult> ManageUserRoles(string userId)
         {
             ViewBag.userId = userId;
@@ -89,7 +90,8 @@ namespace CustomUserManagement.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
+        [Authorize(Policy = "EditRolePolicy")]
         public async Task<IActionResult> ManageUserRoles(List<ManageUserRolesViewModel> model, string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
@@ -163,7 +165,7 @@ namespace CustomUserManagement.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+      
         public async Task<IActionResult> ManageUserClaims(UserClaimsViewModel model)
         {
             var user = await _userManager.FindByIdAsync(model.UserId);
@@ -230,7 +232,7 @@ namespace CustomUserManagement.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+      
         public async Task<IActionResult> EditUser(EditUserViewModel model)
         {
             if (ModelState.IsValid)
@@ -269,7 +271,7 @@ namespace CustomUserManagement.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+      
         public async Task<IActionResult> DeleteUser(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
