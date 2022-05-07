@@ -1,7 +1,7 @@
 ﻿@model LoginViewModel
 
 @{
-   ViewBag.Title = "User Login";
+    ViewBag.Title = "User Login";
 }
 
 <h1>User Login</h1>
@@ -28,7 +28,10 @@
                     </label>
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary">Login</button>        
+            <button type="submit" class="btn btn-primary">Login</button>
+            <div>
+                <a asp-action="ForgotPassword">Forgot Password?</a>
+            </div>
         </form>
     </div>
 </div>

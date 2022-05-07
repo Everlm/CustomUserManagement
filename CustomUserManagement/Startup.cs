@@ -48,6 +48,7 @@ namespace CustomUserManagement
                 options.Password.RequiredLength = 10;
                 options.Password.RequiredUniqueChars = 3;
                 options.Password.RequireNonAlphanumeric = false;
+                options.SignIn.RequireConfirmedEmail = true;
 
 
             }).AddEntityFrameworkStores<ApplicationDbContext>()
@@ -81,20 +82,25 @@ namespace CustomUserManagement
                 options.AddPolicy("EditRolePolicy", policy =>
                        policy.AddRequirements(new ManageAdminRolesAndClaimsRequirement()));
 
+                //options.InvokeHandlersAfterFailure = false;
+
                 //Policys whit conditions
                 //options.AddPolicy("EditRolePolicy", policy => policy.RequireAssertion(context =>
                 //context.User.IsInRole("Admin") &&
                 //context.User.HasClaim(claim => claim.Type == "Edit Role" && claim.Value == "true") ||
                 //context.User.IsInRole("Super Admin")));
-               
+
                 //options.AddPolicy("EditRolePolicy",
                 //  policy => policy.RequireClaim("Edit Role"/*, "false"*/));
 
             });
 
-            //Add service auth admin
-            services.AddSingleton<IAuthorizationHandler,
-               CanEditOnlyOtherAdminRolesAndClaimsHandler>();
+            //Add hanlder 1
+            //services.AddSingleton<IAuthorizationHandler,
+            //   CanEditOnlyOtherAdminRolesAndClaimsHandler>();
+
+            //Add handler 2
+            //services.AddSingleton<IAuthorizationHandler, SuperAdminHandler>();
 
             //rute for view AccesDenied
             services.ConfigureApplicationCookie(options =>
