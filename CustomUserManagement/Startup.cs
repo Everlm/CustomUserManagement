@@ -49,10 +49,23 @@ namespace CustomUserManagement
                 options.Password.RequiredUniqueChars = 3;
                 options.Password.RequireNonAlphanumeric = false;
                 options.SignIn.RequireConfirmedEmail = true;
+                options.Tokens.EmailConfirmationTokenProvider = "CustomEmailConfirmation";
 
 
             }).AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders();
+                .AddDefaultTokenProviders()
+                .AddTokenProvider<CustomEmailConfirmationTokenProvider<ApplicationUser>>("CustomEmailConfirmation");
+
+            // Changes token lifespan of all token types
+            services.Configure<DataProtectionTokenProviderOptions>(o =>
+                    o.TokenLifespan = TimeSpan.FromHours(5));
+
+            // Changes token lifespan of just the Email Confirmation Token type
+            services.Configure<CustomEmailConfirmationTokenProviderOptions>(o =>
+                    o.TokenLifespan = TimeSpan.FromDays(3));
+
+            services.Configure<DataProtectionTokenProviderOptions>(o =>
+                                o.TokenLifespan = TimeSpan.FromHours(5));
 
             services.AddRazorPages().AddRazorRuntimeCompilation().AddNToastNotifyNoty(new NotyOptions
             {
@@ -137,7 +150,7 @@ namespace CustomUserManagement
 
             app.UseAuthentication();
             app.UseAuthorization();
-            //NtoasNotify
+            
             app.UseNToastNotify();
             app.UseNotyf();
 

@@ -3,6 +3,8 @@ using CustomUserManagement.Models.AccountViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Threading.Tasks;
 
 namespace CustomUserManagement.Controllers
@@ -11,12 +13,15 @@ namespace CustomUserManagement.Controllers
     {
         private readonly UserManager<ApplicationUser> userManager;
         private readonly SignInManager<ApplicationUser> signInManager;
+        private readonly ILogger<AccountController> logger;
 
         public AccountController(UserManager<ApplicationUser> userManager,
-                                 SignInManager<ApplicationUser> signInManager)
+                                 SignInManager<ApplicationUser> signInManager,
+                                 ILogger<AccountController> logger)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
+            this.logger = logger;
         }
 
         [HttpGet]
@@ -26,7 +31,7 @@ namespace CustomUserManagement.Controllers
         }
 
         [HttpPost]
-
+        [AllowAnonymous]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
@@ -47,10 +52,12 @@ namespace CustomUserManagement.Controllers
                 if (result.Succeeded)
                 {
                     //confirmd token
-                    //var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+                    var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
 
-                    //var confirmationLink = Url.Action("ConfirmEmail", "Account",
-                    //                        new { userId = user.Id, token = token }, Request.Scheme);
+                    var confirmationLink = Url.Action("ConfirmEmail", "Account",
+                                            new { userId = user.Id, token = token }, Request.Scheme);
+                    // Get url
+                    logger.Log(LogLevel.Warning, confirmationLink);
 
                     //if is admin return index
                     if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
@@ -62,7 +69,7 @@ namespace CustomUserManagement.Controllers
                     ViewBag.ErrorMessage = "Before you can Login, please confirm your " +
                             "email, by clicking on the confirmation link we have emailed you";
 
-                    return View("Error");                  
+                    return View("Error");
                 }
 
                 foreach (var error in result.Errors)
@@ -75,6 +82,7 @@ namespace CustomUserManagement.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Login(string returnUrl)
         {
             //No null
@@ -88,7 +96,7 @@ namespace CustomUserManagement.Controllers
         }
 
         [HttpPost]
-
+        [AllowAnonymous]
         public async Task<IActionResult> Login(LoginViewModel model, string returnUrl)
         {
             if (ModelState.IsValid)
@@ -102,9 +110,17 @@ namespace CustomUserManagement.Controllers
                     return View(model);
                 }
 
+                // The last boolean parameter lockoutOnFailure indicates if the account
+                // should be locked on failed logon attempt. On every failed logon
+                // attempt AccessFailedCount column value in AspNetUsers table is
+                // incremented by 1. When the AccessFailedCount reaches the configured
+                // MaxFailedAccessAttempts which in our case is 5, the account will be
+                // locked and LockoutEnd column is populated. After the account is
+                // lockedout, even if we provide the correct username and password,
+                // PasswordSignInAsync() method returns Lockedout result and the login
+                // will not be allowed for the duration the account is locked.
                 var result = await signInManager.PasswordSignInAsync(model.Email,
-                                        model.Password, model.RememberMe, false);
-
+                                                model.Password, model.RememberMe, true);
                 if (result.Succeeded)
                 {
                     if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
@@ -117,6 +133,13 @@ namespace CustomUserManagement.Controllers
                     }
                 }
 
+                // If account is lockedout send the use to AccountLocked view
+                if (result.IsLockedOut)
+                {
+                    return View("AccountLocked");
+                }
+
+
                 ModelState.AddModelError(string.Empty, "Invalid Login Attempt");
             }
 
@@ -124,7 +147,7 @@ namespace CustomUserManagement.Controllers
         }
 
         [HttpPost]
-
+        [AllowAnonymous]
         public async Task<IActionResult> Logout()
         {
             await signInManager.SignOutAsync();
@@ -132,7 +155,6 @@ namespace CustomUserManagement.Controllers
         }
 
         [HttpGet]
-       
         public IActionResult ForgotPassword()
         {
             return View();
@@ -157,7 +179,7 @@ namespace CustomUserManagement.Controllers
                             new { email = model.Email, token = token }, Request.Scheme);
 
                     // Log the password reset link
-                    //logger.Log(LogLevel.Warning, passwordResetLink);
+                    logger.Log(LogLevel.Warning, passwordResetLink);
 
                     // Send the user to Forgot Password Confirmation view
                     return View("ForgotPasswordConfirmation");
@@ -199,6 +221,13 @@ namespace CustomUserManagement.Controllers
                     var result = await userManager.ResetPasswordAsync(user, model.Token, model.Password);
                     if (result.Succeeded)
                     {
+                         // Upon successful password reset and if the account is lockedout, set
+                         // the account lockout end date to current UTC date time, so the user
+                         // can login with the new password
+                        if (await userManager.IsLockedOutAsync(user))
+                        {
+                            await userManager.SetLockoutEndDateAsync(user, DateTimeOffset.UtcNow);
+                        }
                         return View("ResetPasswordConfirmation");
                     }
                     // Display validation errors. For example, password reset token already
@@ -217,9 +246,50 @@ namespace CustomUserManagement.Controllers
             // Display validation errors if model state is not valid
             return View(model);
         }
+
+        [HttpGet]
+        public IActionResult ChangePassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await userManager.GetUserAsync(User);
+                if (user == null)
+                {
+                    return RedirectToAction("Login");
+                }
+
+                // ChangePasswordAsync changes the user password
+                var result = await userManager.ChangePasswordAsync(user,
+                    model.CurrentPassword, model.NewPassword);
+
+                // The new password did not meet the complexity rules or
+                // the current password is incorrect. Add these errors to
+                // the ModelState and rerender ChangePassword view
+                if (!result.Succeeded)
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                    return View();
+                }
+
+                // Upon successfully changing the password refresh sign-in cookie
+                await signInManager.RefreshSignInAsync(user);
+                return View("ChangePasswordConfirmation");
+            }
+
+            return View(model);
+        }
+
         //Email exist valid
         [AcceptVerbs("Get", "Post")]
-
         public async Task<IActionResult> IsEmailInUse(string email)
         {
             var user = await userManager.FindByEmailAsync(email);
