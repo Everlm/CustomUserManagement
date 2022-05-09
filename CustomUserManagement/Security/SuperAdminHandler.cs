@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace CustomUserManagement.Security
 {
-    public class SuperAdminHandler : AuthorizationHandler<ManageAdminRolesAndClaimsRequirement>
+    public class SuperAdminHandler /*: AuthorizationHandler<ManageAdminRolesAndClaimsRequirement>*/
     {
         //private readonly IHttpContextAccessor httpContextAccessor;
         //public SuperAdminHandler(IHttpContextAccessor httpContextAccessor)
@@ -12,14 +12,14 @@ namespace CustomUserManagement.Security
         //    this.httpContextAccessor = httpContextAccessor;
         //}
 
-        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, ManageAdminRolesAndClaimsRequirement requirement)
-        {
-            if (context.User.IsInRole("SuperAdmin"))
-            {
-                context.Succeed(requirement);
-            }
+        //protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, ManageAdminRolesAndClaimsRequirement requirement)
+        //{
+        //    if (context.User.IsInRole("SuperAdmin"))
+        //    {
+        //        context.Succeed(requirement);
+        //    }
 
-            return Task.CompletedTask;
-        }
+        //    return Task.CompletedTask;
+        //}
     }
 }

@@ -95,7 +95,7 @@ namespace CustomUserManagement
                 options.AddPolicy("EditRolePolicy", policy =>
                        policy.AddRequirements(new ManageAdminRolesAndClaimsRequirement()));
 
-                //options.InvokeHandlersAfterFailure = false;
+                options.InvokeHandlersAfterFailure = false;
 
                 //Policys whit conditions
                 //options.AddPolicy("EditRolePolicy", policy => policy.RequireAssertion(context =>
@@ -109,8 +109,8 @@ namespace CustomUserManagement
             });
 
             //Add hanlder 1
-            //services.AddSingleton<IAuthorizationHandler,
-            //   CanEditOnlyOtherAdminRolesAndClaimsHandler>();
+            services.AddSingleton<IAuthorizationHandler,
+               CanEditOnlyOtherAdminRolesAndClaimsHandler>();
 
             //Add handler 2
             //services.AddSingleton<IAuthorizationHandler, SuperAdminHandler>();
@@ -122,12 +122,13 @@ namespace CustomUserManagement
             });
 
             //autethication run app
-            //services.AddMvc(config => {
-            //    var policy = new AuthorizationPolicyBuilder()
-            //                    .RequireAuthenticatedUser()
-            //                    .Build();
-            //    config.Filters.Add(new AuthorizeFilter(policy));
-            //});
+            services.AddMvc(config =>
+            {
+                var policy = new AuthorizationPolicyBuilder()
+                                .RequireAuthenticatedUser()
+                                .Build();
+                config.Filters.Add(new AuthorizeFilter(policy));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

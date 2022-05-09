@@ -14,7 +14,7 @@ using System.Security.Claims;
 
 namespace CustomUserManagement.Controllers
 {
-    //[Authorize(Policy = "AdminRolePolicy")]
+    [Authorize(Policy = "AdminRolePolicy")]
     public class UserManagerController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
