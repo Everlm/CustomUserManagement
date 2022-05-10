@@ -6,16 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Services\**" />
     <Compile Remove="ViewModels\**" />
     <Compile Remove="Views\UserRole\**" />
-    <Content Remove="Services\**" />
     <Content Remove="ViewModels\**" />
     <Content Remove="Views\UserRole\**" />
-    <EmbeddedResource Remove="Services\**" />
     <EmbeddedResource Remove="ViewModels\**" />
     <EmbeddedResource Remove="Views\UserRole\**" />
-    <None Remove="Services\**" />
     <None Remove="ViewModels\**" />
     <None Remove="Views\UserRole\**" />
   </ItemGroup>

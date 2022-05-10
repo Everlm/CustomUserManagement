@@ -1,5 +1,6 @@
 ﻿using CustomUserManagement.Models;
 using CustomUserManagement.Models.AccountViewModels;
+using CustomUserManagement.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -57,6 +58,18 @@ namespace CustomUserManagement.Controllers
 
                     var confirmationLink = Url.Action("ConfirmEmail", "Account",
                                             new { userId = user.Id, token = token }, Request.Scheme);
+                    //Email
+                    EmailHelper emailHelper = new EmailHelper();
+                    bool emailResponse = emailHelper.SendEmail(user.Email, confirmationLink);
+
+                    if (emailResponse)
+                    {
+                        return RedirectToAction("Index");
+                    }
+                    else
+                    {
+                        return View("Error");
+                    }
                     // Get url
                     logger.Log(LogLevel.Warning, confirmationLink);
 
