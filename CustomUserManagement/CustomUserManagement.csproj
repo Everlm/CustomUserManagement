@@ -32,8 +32,13 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
+    <PackageReference Include="NETCore.MailKit" Version="2.1.0" />
     <PackageReference Include="NLog.Web.AspNetCore" Version="4.8.2" />
     <PackageReference Include="NToastNotify" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Services\EmailService\" />
   </ItemGroup>
 
 </Project>

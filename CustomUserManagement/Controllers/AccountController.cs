@@ -60,18 +60,10 @@ namespace CustomUserManagement.Controllers
                                             new { userId = user.Id, token = token }, Request.Scheme);
                     //Email
                     EmailHelper emailHelper = new EmailHelper();
-                    bool emailResponse = emailHelper.SendEmail(user.Email, confirmationLink);
+                    emailHelper.SendEmail(user.Email, confirmationLink);
 
-                    if (emailResponse)
-                    {
-                        return RedirectToAction("Index");
-                    }
-                    else
-                    {
-                        return View("Error");
-                    }
                     // Get url
-                    logger.Log(LogLevel.Warning, confirmationLink);
+                    //logger.Log(LogLevel.Warning, confirmationLink);
 
                     //if is admin return index
                     if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
@@ -305,6 +297,7 @@ namespace CustomUserManagement.Controllers
 
         //Email exist valid
         [AcceptVerbs("Get", "Post")]
+        [AllowAnonymous]
         public async Task<IActionResult> IsEmailInUse(string email)
         {
             var user = await userManager.FindByEmailAsync(email);
@@ -320,6 +313,7 @@ namespace CustomUserManagement.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> ConfirmEmail(string userId, string token)
         {
             if (userId == null || token == null)

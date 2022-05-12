@@ -8,17 +8,18 @@ namespace CustomUserManagement.Services
         public bool SendEmail(string userEmail, string confirmationLink)
         {
             MailMessage mailMessage = new MailMessage();
-            mailMessage.From = new MailAddress("devsupporttest@gmail.com");
+            mailMessage.From = new MailAddress("mooncodetest@outlook.com");
             mailMessage.To.Add(new MailAddress(userEmail));
 
-            mailMessage.Subject = "Confirm your email";
+            mailMessage.Subject = "mooncodetest@outlook.com";
             mailMessage.IsBodyHtml = true;
-            mailMessage.Body = confirmationLink;
+            mailMessage.Body =confirmationLink;
 
             SmtpClient client = new SmtpClient();
-            client.Credentials = new System.Net.NetworkCredential("devsupporttest@gmail.com", "yourpassword");
-            client.Host = "smtp.gmail.com";
-            client.Port = 465;
+            client.Credentials = new System.Net.NetworkCredential("mooncodetest@outlook.com", "*******");
+            client.EnableSsl = true;
+            client.Host = "smtp.office365.com";
+            client.Port = 587;
 
             try
             {
