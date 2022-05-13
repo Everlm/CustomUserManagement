@@ -1,6 +1,7 @@
 ﻿using CustomUserManagement.Models;
 using CustomUserManagement.Models.AccountViewModels;
 using CustomUserManagement.Services;
+using CustomUserManagement.Services.EmailService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -15,14 +16,17 @@ namespace CustomUserManagement.Controllers
         private readonly UserManager<ApplicationUser> userManager;
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly ILogger<AccountController> logger;
+        private readonly IMailService mailService;
 
         public AccountController(UserManager<ApplicationUser> userManager,
                                  SignInManager<ApplicationUser> signInManager,
-                                 ILogger<AccountController> logger)
+                                 ILogger<AccountController> logger,
+                                 IMailService mailService)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.logger = logger;
+            this.mailService = mailService;
         }
 
         [HttpGet]
@@ -59,9 +63,9 @@ namespace CustomUserManagement.Controllers
                     var confirmationLink = Url.Action("ConfirmEmail", "Account",
                                             new { userId = user.Id, token = token }, Request.Scheme);
                     //Email
-                    EmailHelper emailHelper = new EmailHelper();
-                    emailHelper.SendEmail(user.Email, confirmationLink);
-
+                    //EmailHelper emailHelper = new EmailHelper();
+                    //emailHelper.SendEmail(user.Email, confirmationLink);
+                    await mailService.SendEmailAsync(user.Email, confirmationLink);
                     // Get url
                     //logger.Log(LogLevel.Warning, confirmationLink);
 

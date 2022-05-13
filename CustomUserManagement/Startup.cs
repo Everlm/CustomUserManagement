@@ -20,6 +20,9 @@ using AspNetCoreHero.ToastNotification.Extensions;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 using CustomUserManagement.Security;
+using CustomUserManagement.Settings;
+using CustomUserManagement.Services.EmailService;
+
 
 namespace CustomUserManagement
 {
@@ -35,7 +38,8 @@ namespace CustomUserManagement
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            
+            services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
+            services.AddTransient<IMailService, Services.EmailService.MailService>();
 
             services.AddControllersWithViews();
             services.AddDbContext<ApplicationDbContext>(options =>
