@@ -19,13 +19,17 @@ namespace CustomUserManagement.Services.EmailService
 
         public async Task SendEmailAsync(string userEmail, string confirmationLink)
         {
+            
             var email = new MimeMessage();
             email.Sender = MailboxAddress.Parse(_mailSettings.Mail);
             email.To.Add(MailboxAddress.Parse(userEmail));
             email.Subject = _mailSettings.Mail;
+           
             var builder = new BodyBuilder();
 
-            builder.HtmlBody = confirmationLink;
+            //builder.TextBody = string.Format(@"Hello{0}.",userEmail);
+            builder.HtmlBody = string.Format(@"<p>Hello {0},<br> To activate your account, please click <a href={1}> here</a> to verify your email address.", userEmail,confirmationLink);      
+            
             email.Body = builder.ToMessageBody();
             using var smtp = new MailKit.Net.Smtp.SmtpClient();
             smtp.Connect(_mailSettings.Host, _mailSettings.Port, SecureSocketOptions.StartTls);
